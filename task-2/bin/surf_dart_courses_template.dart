@@ -1,57 +1,101 @@
-//Опеределим тип: товар и услуга
+import 'package:meta/meta.dart';
+
+/// Определим тип: товар и услуга.
 enum ProductType { goods, services }
 
-//Класс "Товар". Содержит: код, наименование, тип. Также может быть назначена цена при создании
+/// Класс "Товар". Неизменяемый.
+@immutable
 class Product {
+  /// Код товара.
   final String id;
-  String name;
-  double? price;
+
+  /// Наименование товара.
+  final String name;
+
+  /// Цена товара.
+  final double? price;
+
+  /// Тип товара
   final ProductType type;
 
+  /// Цена не является обязательной при создании, но может быть назначена.
   Product(
       {required this.id, required this.name, required this.type, this.price});
 
-  //Метод позволяет назначить цену уже существующему товару
-  void setPrice(double newPrice) {
-    if (newPrice != null) {
-      price = newPrice;
-    } else
-      price = 0;
+  /// При изменении создаем копию объекта и возвращаем ее.
+  Product copyWith({
+    String? id,
+    String? name,
+    double? price,
+    ProductType? type,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      price: price ?? this.price,
+      type: type ?? this.type,
+    );
   }
+
+  /// Метод позволяет назначить или изменить цену существующему товару.
+  Product withNewPrice(double price) {
+    return copyWith(price: price);
+  }
+
+  //   void setPrice(double newPrice) {
+  //   if (newPrice != null) {
+  //     price = newPrice;
+  //   } else
+  //     price = 0;
+  // }
 }
 
-//Класс строки списка товаров заказа. Сордержит: объект товара, количество, цену.
-//Сумма при создании не назначается, а вычисляется отдельным методом.
+/// Класс строки списка товаров заказа.
 class RowTable {
+  /// Товар.
   Product product;
+
+  /// Количество товара.
   int count;
+
+  /// Цена товара.
   double price;
+
+  /// Сумма товара.
   double? _sum;
 
   double? get sum => _sum;
 
+  /// Сумма при создании не назначается, а вычисляется отдельным методом.
   RowTable({required this.product, required this.count, required this.price});
 
-  //Метод вычисления суммы строки.
+  /// Метод вычисления суммы строки.
   void rowSum() {
     _sum = count * price;
   }
 }
 
-//Класс заказа. Содержит: номер и дата заказа
-//Список товаров необязателен при создании
-//Сумма заказа не назначается, а вычисляется отдельным методом
+// Класс заказа.
 class Order {
+  /// Номер заказа.
   final String number;
+
+  /// Дата заказа.
   DateTime date;
+
+  /// Сумма заказа.
   double _sum = 0;
+
+  /// Список товаров с ценой и количеством.
   List<RowTable>? productList;
 
+  /// Список товаров необязателен при создании.
+  /// Сумма заказа не назначается, а вычисляется методом sumDoc.
   Order({required this.number, required this.date, this.productList});
 
   double get sum => _sum;
 
-  //Метод пердоставляет возможность добавления новой строки в заказ
+  /// Метод предоставляет возможность добавления новой строки в заказ.
   void addRow(newRow) {
     if (newRow != null) {
       productList?.add(newRow);
@@ -59,7 +103,7 @@ class Order {
     ;
   }
 
-  //Метод вычисляет общую сумму заказа. При обходе списка сначала вычисляется сумма строки
+  /// Метод вычисляет общую сумму заказа. При обходе списка сначала вычисляется сумма строки.
   void sumDoc() {
     _sum = 0.00;
     if (productList != null && productList!.isNotEmpty) {
@@ -72,7 +116,7 @@ class Order {
 }
 
 void main() {
-  //Сначала создадим список товаров и услуг, при этом не везде установим цену
+  /// Сначала создадим список товаров и услуг, при этом не везде будем устанавливать цену.
   Map<String, Product> products = {
     '1': Product(id: '1', name: 'Чайник', type: ProductType.goods, price: 1000),
     '2': Product(
@@ -83,17 +127,21 @@ void main() {
     '6': Product(id: '6', name: 'Установка', type: ProductType.services)
   };
 
-  //Установим цены на ряд товаров отдельно
-  products['3']?.setPrice(1500);
-  products['4']?.setPrice(75000);
+  /// Установим цены на ряд товаров отдельно.
+  products['3']?.withNewPrice(1500);
+  products['4']?.withNewPrice(75000);
 
-  //Создаем новый заказ
+  /// Создаем новый заказ.
   Order newOrder = Order(number: '0001', date: DateTime.now(), productList: []);
 
+  /// Добавим строки в заказ.
   newOrder.addRow(RowTable(
       product: products["2"]!, count: 1, price: products["2"]!.price ?? 0.00));
   newOrder.addRow(RowTable(product: products["5"]!, count: 1, price: 100));
+
+  /// Вычисялем сумму заказа.
   newOrder.sumDoc();
 
+  /// Выведем в консоль полученную сумму заказа.
   print('Сумма заказа: ${newOrder.sum}');
 }
