@@ -183,13 +183,13 @@ void main() {
   }
 
   /// Общий возраст всех машин.
-  int ageAll = 0;
+  var ageAll = 0;
 
   /// Количество машин - половина от списка всех машин.
-  int halfMachinery = 0;
+  var halfMachinery = 0;
 
   /// Список машин для последующего получения половины от списка машин.
-  List ageMachinery = [];
+  List<int> ageMachinery = [];
 
   /// Теперь нужно посчитать общий возвраст машин в нашем map.
   for (final age in mapAgeMachinery.values) {
@@ -198,7 +198,7 @@ void main() {
   }
 
   /// Вычисляем средний возраст машины от общего возраста всех машин.
-  double ageAverage = ageAll / ageMachinery.length;
+  var ageAverage = ageAll / ageMachinery.length;
 
   /// Для наглядности выводим на экран возраста всех машин.
   print(ageMachinery);
