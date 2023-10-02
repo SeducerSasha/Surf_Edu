@@ -43,6 +43,7 @@ abstract class Running {
   });
 }
 
+/// Класс "Пловец"
 class SprtsmenSwimming implements Sportsman, Swimming {
   @override
   int distanceMetersSwimming;
@@ -59,6 +60,7 @@ class SprtsmenSwimming implements Sportsman, Swimming {
   }
 }
 
+/// Класс "Спортсмен триатлона"
 class SprtsmenTriathlon implements Sportsman, Swimming, Cycling, Running {
   @override
   int distanceMetersCycling = 180200;
@@ -82,10 +84,16 @@ class SprtsmenTriathlon implements Sportsman, Swimming, Cycling, Running {
 }
 
 void main() {
+  /// Создаем спортсмена, участника триатлона
   final sportsmen1 = SprtsmenTriathlon(name: 'Вася Скороходов');
+
+  /// Выводим информацию о спортсмене
   print(sportsmen1);
 
+  /// Создаем спортсмена-пловца
   final sportsmen2 =
       SprtsmenSwimming(name: 'Виктор Петров', distanceMetersSwimming: 50);
+
+  /// Выводим информацию о спортсмене
   print(sportsmen2);
 }
